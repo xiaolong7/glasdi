@@ -394,9 +394,9 @@ def z_derivative(input, dx, weights, biases, activation='elu'):
             dz_j = dx[:,j,:]
             for i in range(len(weights)-1):
                 input_j = tf.matmul(input_j, weights[i]) + biases[i]
-                input_j = tf.nn.elu(input_j)
                 dz_j = tf.multiply(tf.minimum(tf.exp(input_j),1.0),
                                       tf.matmul(dz_j, weights[i]))
+                input_j = tf.nn.elu(input_j)
             dz.append(tf.matmul(dz_j, weights[-1])) # [batch,output_dim]
         dz = tf.stack(dz, axis=1) # [batch,num_sindy,output_dim]
         
@@ -406,8 +406,8 @@ def z_derivative(input, dx, weights, biases, activation='elu'):
             dz_j = dx[:,j,:]
             for i in range(len(weights)-1):
                 input_j = tf.matmul(input_j, weights[i]) + biases[i]
-                input_j = tf.nn.relu(input_j)
                 dz_j = tf.multiply(tf.to_float(input_j > 0), tf.matmul(dz_j, weights[i]))
+                input_j = tf.nn.relu(input_j)
             dz.append(tf.matmul(dz_j, weights[-1])) # [batch,output_dim]
         dz = tf.stack(dz, axis=1) # [batch,num_sindy,output_dim]
         
